@@ -263,7 +263,7 @@ func ValidateParameter(ctx context.Context, input *RequestValidationInput, param
 	if options.RegexCompiler != nil {
 		opts = append(opts, openapi3.SetSchemaRegexCompiler(options.RegexCompiler))
 	}
-	opts = append(opts, options.SchemaValidationOptions...)
+	opts = append(opts, options.schemaValidationOptions(input.Route)...)
 	if input.Route != nil && input.Route.Spec.IsOpenAPI31OrLater() {
 		opts = append(opts, openapi3.EnableJSONSchema2020())
 	}
@@ -376,7 +376,7 @@ func ValidateRequestBody(ctx context.Context, input *RequestValidationInput, req
 		opts = append(opts, openapi3.SetSchemaRegexCompiler(options.RegexCompiler))
 	}
 	// Append additional schema validation options (e.g., document-scoped format validators)
-	opts = append(opts, options.SchemaValidationOptions...)
+	opts = append(opts, options.schemaValidationOptions(input.Route)...)
 	if input.Route != nil && input.Route.Spec.IsOpenAPI31OrLater() {
 		opts = append(opts, openapi3.EnableJSONSchema2020())
 	}

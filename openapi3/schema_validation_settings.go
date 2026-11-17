@@ -1,6 +1,7 @@
 package openapi3
 
 import (
+	"maps"
 	"sync"
 )
 
@@ -110,9 +111,10 @@ func SetSchemaRegexCompiler(c RegexCompilerFunc) SchemaValidationOption {
 // WithStringFormatValidators adds per-validation string format validators.
 // These validators are checked before global SchemaStringFormats and allow
 // different validations for the same format name across different specs.
+// The map is copied, so later changes to it do not affect validation.
 func WithStringFormatValidators(validators map[string]StringFormatValidator) SchemaValidationOption {
 	return func(s *schemaValidationSettings) {
-		s.stringFormats = validators
+		s.stringFormats = maps.Clone(validators)
 	}
 }
 
@@ -133,7 +135,7 @@ func WithStringFormatValidator(name string, validator StringFormatValidator) Sch
 // different validations for the same format name across different specs.
 func WithNumberFormatValidators(validators map[string]NumberFormatValidator) SchemaValidationOption {
 	return func(s *schemaValidationSettings) {
-		s.numberFormats = validators
+		s.numberFormats = maps.Clone(validators)
 	}
 }
 
@@ -154,7 +156,7 @@ func WithNumberFormatValidator(name string, validator NumberFormatValidator) Sch
 // different validations for the same format name across different specs.
 func WithIntegerFormatValidators(validators map[string]IntegerFormatValidator) SchemaValidationOption {
 	return func(s *schemaValidationSettings) {
-		s.integerFormats = validators
+		s.integerFormats = maps.Clone(validators)
 	}
 }
 

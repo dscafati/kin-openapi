@@ -3526,6 +3526,7 @@ func WithStringFormatValidators(validators map[string]StringFormatValidator) Sch
     WithStringFormatValidators adds per-validation string format validators.
     These validators are checked before global SchemaStringFormats and allow
     different validations for the same format name across different specs.
+    The map is copied, so later changes to it do not affect validation.
 
 type SchemaValueError struct {
 	// ValueKind identifies the schema sub-field whose value failed

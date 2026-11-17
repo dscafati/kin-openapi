@@ -75,7 +75,7 @@ func ValidateResponse(ctx context.Context, input *ResponseValidationInput) error
 		opts = append(opts, openapi3.SetSchemaRegexCompiler(options.RegexCompiler))
 	}
 	// Append additional schema validation options (e.g., document-scoped format validators)
-	opts = append(opts, options.SchemaValidationOptions...)
+	opts = append(opts, options.schemaValidationOptions(route)...)
 	if route.Spec.IsOpenAPI31OrLater() {
 		opts = append(opts, openapi3.EnableJSONSchema2020())
 	}

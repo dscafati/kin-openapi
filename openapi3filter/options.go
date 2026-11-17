@@ -1,6 +1,9 @@
 package openapi3filter
 
-import "github.com/getkin/kin-openapi/openapi3"
+import (
+	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/getkin/kin-openapi/routers"
+)
 
 // Options used by ValidateRequest and ValidateResponse
 type Options struct {
@@ -47,8 +50,20 @@ type Options struct {
 	customSchemaErrorFunc CustomSchemaErrorFunc
 
 	// Additional schema validation options to pass through to schema validation.
-	// Use this to pass document-scoped format validators or other per-validation options.
+	// The route document's own options (e.g. its registered format validators) are applied
+	// automatically, before the options given here: a With*FormatValidators map replaces the
+	// document's validators for that value type, a singular With*FormatValidator adds to them.
 	SchemaValidationOptions []openapi3.SchemaValidationOption
+}
+
+// schemaValidationOptions returns the schema validation options to apply for a route:
+// the document's own options (e.g. its registered format validators), followed by any
+// caller-provided options so the caller's take precedence.
+func (o *Options) schemaValidationOptions(route *routers.Route) []openapi3.SchemaValidationOption {
+	if route == nil || route.Spec == nil {
+		return o.SchemaValidationOptions
+	}
+	return append(route.Spec.GetSchemaValidationOptions(), o.SchemaValidationOptions...)
 }
 
 // CustomSchemaErrorFunc allows for custom the schema error message.

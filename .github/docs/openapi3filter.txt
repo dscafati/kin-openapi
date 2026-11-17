@@ -264,7 +264,9 @@ type Options struct {
 	KeepValidatedValue bool
 
 	// Additional schema validation options to pass through to schema validation.
-	// Use this to pass document-scoped format validators or other per-validation options.
+	// The route document's own options (e.g. its registered format validators) are applied
+	// automatically, before the options given here: a With*FormatValidators map replaces the
+	// document's validators for that value type, a singular With*FormatValidator adds to them.
 	SchemaValidationOptions []openapi3.SchemaValidationOption
 	// Has unexported fields.
 }

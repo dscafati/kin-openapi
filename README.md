@@ -329,6 +329,10 @@ for _, path := range doc.Paths.InMatchingOrder() {
 
 ## CHANGELOG: Sub-v1 breaking API changes
 
+### v0.154.0
+* `openapi3filter` now also applies the route document's own schema validation options (see `(*openapi3.T).GetSchemaValidationOptions()`, e.g. format validators registered with `SetStringFormatValidator`) when validating request parameters, request bodies and response bodies automatically; a `With*FormatValidators` map given in `openapi3filter.Options.SchemaValidationOptions` replaces the document's validators for that value type, and a singular `With*FormatValidator` adds to them. A value a document-registered format validator rejects no longer passes validation silently.
+* The `openapi3.With*FormatValidators` options now copy the given map instead of keeping a reference to it, so changes to the map after passing it do not affect validation, and a singular `With*FormatValidator` passed alongside no longer writes into that map.
+
 ### v0.153.0
 * `openapi3filter` now parses `number` values of parameters and `application/x-www-form-urlencoded`/`multipart/form-data` bodies as decimal numbers only, so Go float literals such as `0x1p4`, `1_000`, `Inf`, `-infinity` or `NaN` are now rejected as invalid numbers.
 * `(*openapi3.Schema).Validate(..)` (hence `(*openapi3.T).Validate(..)`) now rejects a `multipleOf` of zero or less (`openapi3.SchemaMultipleOfNotPositiveError`), as JSON Schema requires it to be strictly greater than 0. Such a schema used to pass validation and then reject every value with `multipleOf must be greater than zero`.
